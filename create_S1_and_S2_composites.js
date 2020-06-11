@@ -1,5 +1,5 @@
 ///////////////////////////////
-// Create the Sentinel-1 and Sentinel-2 composites used to classify oil palm plantations
+// Create the Sentinel-1 and Sentinel-2 composites used for the classification of oil palm plantations
 //
 // The code generates the Sentinel-1 and Sentinel-2 composites and exports the output to Google Drive
 //
