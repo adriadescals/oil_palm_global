@@ -5,3 +5,5 @@ https://code.earthengine.google.com/2e59a630f13906de5f3d0eb696b07ee4
 
 Adrià Descals - a.descals@creaf.uab.cat
 CREAF - Centre de Recerca Ecològica i Aplicacions Forestals
+
+Descals, A., Wich, S., Meijaard, E., Gaveau, D. L., Peedell, S., & Szantoi, Z. (2021). High-resolution global map of smallholder and industrial closed-canopy oil palm plantations. Earth System Science Data, 13(3), 1211-1231.
