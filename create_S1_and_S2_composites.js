@@ -109,7 +109,7 @@ function calcLIA(image) {
                            .reduceRegion(ee.Reducer.mean(), s1_inc.get('system:footprint'), 1000)
                            .get('aspect');
   // Here we derive the terrain slope and aspect
-  var srtm = ee.Image("CGIAR/SRTM90_V4")
+  var srtm = ee.Image("CGIAR/SRTM90_V4").unmask(0)
   var srtm_slope = ee.Terrain.slope(srtm).select('slope').rename('srtm_slope');
   var srtm_aspect = ee.Terrain.aspect(srtm).select('aspect').rename('srtm_aspect');
   // And then the projection of the slope
@@ -147,28 +147,25 @@ function toDB(image) {
 // Transform the VV and HV for a better land cover visualization
 var make_s1comp = function (GRD, bandVV, bandHV) {
   
-  var GRD_vv = GRD.filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))
-                .select(bandVV);
-
-  var GRD_vh = GRD.filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))
-                .select(bandHV);
+    var GRD_vv = GRD.filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))
+                  .select(bandVV).map(function(im){ return im.updateMask(im.neq(0))});
   
-  var percThresh = 50 // do the median of all images
-  var converter = ee.Image(-1);
-  var five = ee.Image(5.5);
-  var GRD_t0_vh = GRD_vh
-    //.reduce(ee.Reducer.sampleStdDev())
-    .reduce(ee.Reducer.percentile([percThresh]))//.median()
-    .multiply(converter)
-    .subtract(five);
-  var GRD_t0_vv = GRD_vv
-    //.reduce(ee.Reducer.sampleStdDev())
-    .reduce(ee.Reducer.percentile([percThresh]))//.median()
-    .multiply(converter);
-
-  var img = GRD_t0_vh.addBands(GRD_t0_vv).rename(['t0_vh','t0_vv'])
-return img;
-
+    var GRD_vh = GRD.filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))
+                  .select(bandHV).map(function(im){ return im.updateMask(im.neq(0))});
+    
+    var percThresh = 50
+    var GRD_t0_vh = GRD_vh
+      //.reduce(ee.Reducer.sampleStdDev())
+      .reduce(ee.Reducer.percentile([percThresh]))//.median()
+      .multiply(ee.Image(-1))
+      .subtract(5.5);
+    var GRD_t0_vv = GRD_vv
+      //.reduce(ee.Reducer.sampleStdDev())
+      .reduce(ee.Reducer.percentile([percThresh]))//.median()
+      .multiply(ee.Image(-1));
+  
+    var img = GRD_t0_vh.addBands(GRD_t0_vv).rename(['t0_vh','t0_vv'])
+  return img;
 };
 
 // ===================================================================
