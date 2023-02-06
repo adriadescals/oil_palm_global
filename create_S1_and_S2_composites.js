@@ -253,7 +253,7 @@ var S1_export = s1.multiply(12).uint8()
 
 {
 // call S2 collection
-var col = ee.ImageCollection('COPERNICUS/S2_SR')
+var col = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
            .filterDate(ee.Date(endDate).advance(-spanS2, 'month'), ee.Date(endDate))
                   
 var S2 = col.map(function(im){
